@@ -4,7 +4,7 @@ In D8 you can export all of your sites configurations to yml files that can be p
 
 The easiest way to do this is with the **Drupal Console**.
 ```bash
-drupal config:export:content:type
+drupal config:export:content:type CONTENT-TYPE --module=MODULE  
 ```
 
 This will ask 1. what module to save the content type's config in, and 2. what content type to export. 3. It will ask if the configuration should be optional or required.

@@ -1,0 +1,87 @@
+# Drupal 8 Migrate Config
+
+[CGA Initiatives Drupal 8 Migration Module](https://github.com/underhilllabs/cga_initiatives)
+
+
+### Initiatives Migration Config yml
+
+Drupal has an ETL like migration process, however the following terms are used:
+
+> Extract   => Source
+> Transform => Process
+> Load      => Destination
+
+
+```yml
+id: initiatives
+label: CGA Initiatives Migration
+migration tags:
+  - clics
+source:
+  plugin: url
+  track_changes: true
+  urls: ["http://cogabart.denvertech.org/2018-63.json","http://cogabart.denvertech.org/2018-67.json","http://cogabart.denvertech.org/2018-69.json","http://cogabart.denvertech.org/2018-70.json"]
+  item_selector: 0
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  ids:
+    key:
+      type: string
+  fields:
+    -
+      name: number
+      label: 'number'
+      selector: number
+    -
+      name: key
+      label: 'key'
+      selector: "key"
+    -
+      name: initiative_title
+      label: 'Initiative Title'
+      selector: initiative_title
+    -
+      name: election_cycle
+      label: 'election cycle'
+      selector: election_cycle
+    -
+      name: election_year
+      label: 'election year'
+      selector: election_year
+    -
+      name: initiative_status
+      label: 'initiative_status'
+      selector: initiative_status
+    -
+      name: date_submitted
+      label: 'date_submitted'
+      selector: date_submitted
+    -
+      name: initiative_type
+      label: 'initiative_type'
+      selector: initiative_type
+process:
+  type:
+    plugin: default_value
+    default_value: initiative
+  title: initiative_title
+  field_key: key
+  field_election_year: election_year
+  field_initiative_number: number
+  field_date_submitted:
+    plugin: format_date
+    from_format: 'm/d/Y'
+    to_format: 'Y-m-d'
+    source: date_submitted
+  field_current_status:
+    source: initiative_status
+    plugin: entity_generate
+  field_election_cycle:
+    source: election_cycle
+    plugin: entity_generate
+  field_initiative_type:
+    source: initiative_type
+    plugin: entity_generate
+destination:
+  plugin: entity:node
+```
